@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 const database = require("./services/database");
-const MovieRouter = require("./routes/movies");
+const BookRouter = require("./routes/books");
+const { response } = require("express");
 
 app.use(express.json());
-app.use("/dashboard", MovieRouter);
+app.use("/api/BookStore", BookRouter);
 database.connect();
 
 app.listen(8000, console.log("Server running on port 8000"));

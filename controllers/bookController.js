@@ -1,18 +1,18 @@
-const { replaceOne } = require("../models/Movie");
-const Movie = require("../models/Movie");
+const { replaceOne } = require("../models/Book");
+const Book = require("../models/Book");
 const parseRequestBody = require("../utils/parseRequestBody");
 
-const getMovies = async (request, response) => {
+const getBooks = async (request, response) => {
   try {
-    const movies = await Movie.find();
-    if (!movies) {
+    const books = await Book.find();
+    if (!books) {
       return response.status(400).json({
         error: "Error in getting movies!",
       });
     }
 
     response.status(200).json({
-      movies: movies,
+      books: books,
     });
   } catch (e) {
     return response.status(400).json({
@@ -21,18 +21,18 @@ const getMovies = async (request, response) => {
   }
 };
 
-const getMovieById = async (request, response) => {
+const getBookById = async (request, response) => {
   try {
-    const movie = await Movie.find({ _id: request.params.id });
+    const books = await Book.find({ _id: request.params.id });
 
-    if (!movie || movie.length === 0) {
+    if (!books || books.length === 0) {
       return response.status(400).json({
-        error: "Movie not found!",
+        error: "Book not found!",
       });
     }
 
     response.status(200).json({
-      movie: movie,
+      books: books,
     });
   } catch (e) {
     return response.status(400).json({
@@ -41,16 +41,18 @@ const getMovieById = async (request, response) => {
   }
 };
 
-const addMovie = async (request, response) => {
+const addBook = async (request, response) => {
   try {
-    const movie = {
+    const book = {
       title: request.body.title,
       genre: request.body.genre,
-      director: request.body.director,
+      author:request.body.author,
+      published:request.body.published,
+      price:request.body.price
     };
 
-    const newMovie = new Movie(movie);
-    const result = await newMovie.save();
+    const newBook = new Book(book);
+    const result = await newBook.save();
 
     if (!result) {
       return response.status(400).json({
@@ -59,7 +61,7 @@ const addMovie = async (request, response) => {
     }
 
     response.status(200).json({
-      message: "New movie added!",
+      message: "New book added!",
     });
   } catch (e) {
     return response.status(400).json({
@@ -68,17 +70,17 @@ const addMovie = async (request, response) => {
   }
 };
 
-const updateMovie = async (request, response) => {
+const updateBook = async (request, response) => {
   const updates = parseRequestBody(request.body);
   try {
-    const result = await Movie.updateOne(
+    const result = await Book.updateOne(
       { _id: request.params.id },
       { $set: updates }
     );
 
     if (!result) {
       return response.status(400).json({
-        error: "Error in updating movie!",
+        error: "Error in updating Book.",
       });
     }
 
@@ -92,9 +94,9 @@ const updateMovie = async (request, response) => {
   }
 };
 
-const deleteMovie = async (request, response) => {
+const deleteBook = async (request, response) => {
   try {
-    await Movie.deleteOne({ _id: request.params.id }, (error, result) => {
+    await Book.deleteOne({ _id: request.params.id }, (error, result) => {
       if (error) {
         return response.status(400).json({
           error: error,
@@ -102,7 +104,7 @@ const deleteMovie = async (request, response) => {
       }
 
       response.status(200).json({
-        message: "Successfully deleted movie",
+        message: "Successfully deleted book",
         result: result,
       });
     });
@@ -114,9 +116,9 @@ const deleteMovie = async (request, response) => {
 };
 
 module.exports = {
-  getMovies,
-  addMovie,
-  getMovieById,
-  updateMovie,
-  deleteMovie,
+  getBooks,
+  addBook,
+  getBookById,
+  updateBook,
+  deleteBook,
 };
